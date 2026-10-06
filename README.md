@@ -10,7 +10,7 @@ Pet project: сервис для ведения личной игровой би
 - CI: GitHub Actions
 
 ## Roadmap
-- [ ] Архитектура и API
+- [x] Архитектура и API
 - [ ] Backend
 - [ ] UI
 - [ ] CI
