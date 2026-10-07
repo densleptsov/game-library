@@ -1,3 +1,14 @@
+# --- Web framework ---
 fastapi>=0.115
 uvicorn[standard]>=0.32
+
+# --- Settings ---
 pydantic-settings>=2.5
+
+# --- Database ---
+sqlalchemy>=2.0
+alembic>=1.13
+
+# --- Auth ---
+python-jose[cryptography]>=3.3
+passlib[bcrypt]>=1.7
