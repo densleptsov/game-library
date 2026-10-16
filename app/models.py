@@ -3,6 +3,7 @@
 Соответствуют docs/data-model.md.
 При изменении здесь — обновляй документ, и наоборот.
 """
+
 from __future__ import annotations
 
 import enum
@@ -10,18 +11,20 @@ from datetime import datetime
 
 from sqlalchemy import (
     CheckConstraint,
-    Enum as SAEnum,
     ForeignKey,
     String,
     UniqueConstraint,
     func,
+)
+from sqlalchemy import (
+    Enum as SAEnum,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 
 
-class LibraryStatus(str, enum.Enum):
+class LibraryStatus(enum.StrEnum):
     """Статус прохождения игры пользователем.
 
     Наследуемся от str, чтобы значение автоматически работало

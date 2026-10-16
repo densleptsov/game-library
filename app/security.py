@@ -1,12 +1,12 @@
 """Безопасность: хеширование паролей и работа с JWT."""
-from datetime import datetime, timedelta, timezone
+
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 import bcrypt
 from jose import jwt
 
 from app.config import settings
-
 
 # --- Пароли ---
 
@@ -22,8 +22,7 @@ def hash_password(plain: str) -> str:
     pwd_bytes = plain.encode("utf-8")
     if len(pwd_bytes) > _BCRYPT_MAX_BYTES:
         raise ValueError(
-            f"Password is too long: {len(pwd_bytes)} bytes, "
-            f"max {_BCRYPT_MAX_BYTES} bytes"
+            f"Password is too long: {len(pwd_bytes)} bytes, max {_BCRYPT_MAX_BYTES} bytes"
         )
     salt = bcrypt.gensalt(rounds=12)
     hashed: bytes = bcrypt.hashpw(pwd_bytes, salt)
@@ -46,7 +45,7 @@ ALGORITHM = "HS256"
 
 def create_access_token(user_id: int) -> str:
     """Создаёт подписанный JWT для пользователя."""
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
     expire = now + timedelta(minutes=settings.access_token_expire_minutes)
     payload: dict[str, Any] = {
         "sub": str(user_id),

@@ -2,6 +2,7 @@
 
 Запуск: streamlit run ui/app.py
 """
+
 import sys
 from pathlib import Path
 
@@ -14,7 +15,6 @@ if str(_ROOT) not in sys.path:
 import streamlit as st  # noqa: E402
 
 from ui import pages  # noqa: E402
-
 
 st.set_page_config(
     page_title="Game Library",

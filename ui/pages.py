@@ -1,11 +1,9 @@
 """Страницы UI: логин/регистрация, каталог, библиотека."""
-from datetime import datetime
 
 import streamlit as st
 
 from ui import api_client
 from ui.api_client import ApiError
-
 
 STATUS_OPTIONS = ["planned", "playing", "completed", "dropped"]
 STATUS_LABELS = {
@@ -86,9 +84,7 @@ def catalog_page(token: str) -> None:
     with col_search:
         search = st.text_input("Поиск по названию", placeholder="Witcher...")
     with col_platform:
-        platform = st.selectbox(
-            "Платформа", options=["Все"] + PLATFORM_OPTIONS
-        )
+        platform = st.selectbox("Платформа", options=["Все"] + PLATFORM_OPTIONS)
 
     try:
         data = api_client.list_games(
@@ -209,15 +205,22 @@ def library_page(token: str) -> None:
                         format_func=lambda x: STATUS_LABELS[x],
                     )
                     new_rating = st.slider(
-                        "Оценка", min_value=0, max_value=10,
-                        value=entry["rating"] or 0, key=f"rating_{entry['id']}",
+                        "Оценка",
+                        min_value=0,
+                        max_value=10,
+                        value=entry["rating"] or 0,
+                        key=f"rating_{entry['id']}",
                     )
                     new_hours = st.number_input(
-                        "Часов", min_value=0, max_value=10000,
-                        value=entry["hours_played"] or 0, key=f"hours_{entry['id']}",
+                        "Часов",
+                        min_value=0,
+                        max_value=10000,
+                        value=entry["hours_played"] or 0,
+                        key=f"hours_{entry['id']}",
                     )
                     new_notes = st.text_area(
-                        "Заметки", value=entry["notes"] or "",
+                        "Заметки",
+                        value=entry["notes"] or "",
                         key=f"notes_{entry['id']}",
                     )
 

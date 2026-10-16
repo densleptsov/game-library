@@ -1,4 +1,5 @@
 """Ручки личной библиотеки пользователя: /library."""
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, joinedload
@@ -41,16 +42,12 @@ def list_library(
     status_filter: LibraryStatus | None = Query(None, alias="status"),
     sort: str = Query("-created_at"),
 ) -> LibraryList:
-    base_stmt = select(LibraryEntry).where(
-        LibraryEntry.user_id == current_user.id
-    )
+    base_stmt = select(LibraryEntry).where(LibraryEntry.user_id == current_user.id)
 
     if status_filter is not None:
         base_stmt = base_stmt.where(LibraryEntry.status == status_filter)
 
-    total = db.scalar(
-        select(func.count()).select_from(base_stmt.subquery())
-    ) or 0
+    total = db.scalar(select(func.count()).select_from(base_stmt.subquery())) or 0
 
     # Сортировка
     allowed_sorts = {
@@ -66,8 +63,7 @@ def list_library(
         )
 
     items = db.scalars(
-        base_stmt
-        .options(joinedload(LibraryEntry.game))
+        base_stmt.options(joinedload(LibraryEntry.game))
         .order_by(allowed_sorts[sort])
         .offset(skip)
         .limit(limit)

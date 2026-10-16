@@ -1,4 +1,5 @@
 """Ручки каталога игр: /games."""
+
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
@@ -31,9 +32,7 @@ def list_games(
         stmt = stmt.where(Game.title.ilike(f"%{search}%"))
 
     total = db.scalar(select(func.count()).select_from(stmt.subquery())) or 0
-    items = db.scalars(
-        stmt.order_by(Game.id).offset(skip).limit(limit)
-    ).all()
+    items = db.scalars(stmt.order_by(Game.id).offset(skip).limit(limit)).all()
 
     return GameList(total=total, items=list(items))
 

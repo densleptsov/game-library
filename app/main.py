@@ -1,9 +1,9 @@
 """Точка входа FastAPI-приложения."""
+
 from fastapi import FastAPI
 
 from app.config import settings
 from app.routers import auth, games, library
-
 
 app = FastAPI(
     title=settings.app_name,

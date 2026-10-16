@@ -4,14 +4,15 @@
 отправляет и что получает. Секретные поля (hashed_password)
 не попадают в ответы по дизайну.
 """
+
 from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from app.models import LibraryStatus
 
-
 # --- User ---
+
 
 class UserCreate(BaseModel):
     """Тело запроса POST /auth/register."""
@@ -39,6 +40,7 @@ class UserPublic(BaseModel):
 
 # --- Auth ---
 
+
 class LoginRequest(BaseModel):
     """Тело запроса POST /auth/login."""
 
@@ -53,7 +55,9 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
     expires_in: int
 
+
 # --- Game ---
+
 
 class GameBase(BaseModel):
     """Общие поля Game для создания и обновления."""
@@ -67,6 +71,7 @@ class GameBase(BaseModel):
 
 class GameCreate(GameBase):
     """Тело запроса POST /games."""
+
     pass
 
 
@@ -95,6 +100,7 @@ class GamePublic(BaseModel):
 
 
 # --- Library ---
+
 
 class LibraryEntryCreate(BaseModel):
     """Тело запроса POST /library."""
@@ -131,6 +137,7 @@ class LibraryEntryPublic(BaseModel):
 
 
 # --- Общее: пагинация ---
+
 
 class GameList(BaseModel):
     """Ответ GET /games — список игр с пагинацией."""
