@@ -17,3 +17,6 @@ email-validator>=2.2
 # --- UI ---
 streamlit>=1.40
 requests>=2.32
+
+# --- Dev tools ---
+ruff>=0.7

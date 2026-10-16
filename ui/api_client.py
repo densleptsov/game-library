@@ -2,10 +2,10 @@
 
 Единая точка для base_url, заголовков, обработки ошибок.
 """
+
 import os
 
 import requests
-
 
 # Базовый URL API. Можно переопределить переменной окружения API_URL.
 # По умолчанию — локальный FastAPI на 8000.
@@ -41,8 +41,7 @@ def _handle(response: requests.Response) -> dict | None:
         # detail может быть списком (ошибки Pydantic) — приведём к строке
         if isinstance(detail, list):
             detail = "; ".join(
-                f"{'.'.join(str(x) for x in e.get('loc', []))}: {e.get('msg', '')}"
-                for e in detail
+                f"{'.'.join(str(x) for x in e.get('loc', []))}: {e.get('msg', '')}" for e in detail
             )
         raise ApiError(response.status_code, str(detail))
     if response.status_code == 204:
@@ -51,6 +50,7 @@ def _handle(response: requests.Response) -> dict | None:
 
 
 # --- Auth ---
+
 
 def register(username: str, email: str, password: str) -> dict:
     r = requests.post(
@@ -76,6 +76,7 @@ def me(token: str) -> dict:
 
 
 # --- Games ---
+
 
 def list_games(
     token: str | None = None,
@@ -107,6 +108,7 @@ def create_game(token: str, payload: dict) -> dict:
 
 
 # --- Library ---
+
 
 def list_library(token: str, status_filter: str | None = None) -> dict:
     params = {}

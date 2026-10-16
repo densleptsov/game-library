@@ -2,6 +2,7 @@
 
 get_current_user — извлекает пользователя из JWT в заголовке Authorization.
 """
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import ExpiredSignatureError, JWTError
@@ -10,7 +11,6 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User
 from app.security import decode_access_token
-
 
 # auto_error=False — не бросать 403 автоматически при отсутствии заголовка.
 # Мы хотим вернуть 401 со своим сообщением.
@@ -41,13 +41,13 @@ def get_current_user(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token expired",
             headers={"WWW-Authenticate": "Bearer"},
-        )
+        ) from None
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
-        )
+        ) from None
 
     sub = payload.get("sub")
     if sub is None:

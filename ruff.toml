@@ -1,0 +1,46 @@
+# Конфиг ruff: линтер + форматтер для Python-проекта.
+
+line-length = 100
+target-version = "py312"
+
+# Документацию не трогаем: примеры кода там для читаемости,
+# а не для строгого соответствия PEP 8.
+extend-exclude = ["docs"]
+
+[lint]
+# Наборы правил:
+# E, W — стандартные ошибки/предупреждения pycodestyle
+# F — pyflakes (неиспользуемые импорты, неопределённые имена)
+# I — isort (сортировка импортов)
+# B — flake8-bugbear (потенциальные баги)
+# UP — pyupgrade (устаревший синтаксис)
+select = ["E", "W", "F", "I", "B", "UP"]
+
+# Исключения:
+# E501 — line too long. Ruff format сам разберётся с длиной.
+ignore = ["E501"]
+
+[lint.flake8-bugbear]
+# FastAPI использует вызовы Depends/Query/Path/... в дефолтах аргументов —
+# это декларации зависимостей, а не «дефолтные значения» в обычном смысле.
+# Разрешаем B008 для этих вызовов.
+extend-immutable-calls = [
+    "fastapi.Depends",
+    "fastapi.Query",
+    "fastapi.Path",
+    "fastapi.Body",
+    "fastapi.Header",
+    "fastapi.Cookie",
+    "fastapi.Form",
+    "fastapi.File",
+    "fastapi.Security",
+]
+
+[lint.per-file-ignores]
+# В миграциях Alembic — свой стиль от генератора, не трогаем
+"alembic/versions/*.py" = ["E", "W", "F", "I", "B", "UP"]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"

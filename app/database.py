@@ -6,6 +6,7 @@
 - SessionLocal: фабрика сессий.
 - get_db: FastAPI-зависимость, выдающая сессию в ручки.
 """
+
 from collections.abc import Generator
 
 from sqlalchemy import create_engine
@@ -20,6 +21,7 @@ class Base(DeclarativeBase):
     Все модели наследуются от Base, чтобы SQLAlchemy знала о них
     и складывала их описания в Base.metadata (единый каталог схемы).
     """
+
     pass
 
 
@@ -27,11 +29,7 @@ class Base(DeclarativeBase):
 # Движок знает, как подключаться к БД и как разговаривать с её драйвером.
 # connect_args с check_same_thread нужен только для SQLite: uvicorn может
 # обрабатывать запросы в разных потоках, а SQLite по умолчанию это запрещает.
-_connect_args = (
-    {"check_same_thread": False}
-    if settings.database_url.startswith("sqlite")
-    else {}
-)
+_connect_args = {"check_same_thread": False} if settings.database_url.startswith("sqlite") else {}
 
 engine = create_engine(
     settings.database_url,
@@ -45,8 +43,8 @@ engine = create_engine(
 # Создаём фабрику, из которой будем получать новые сессии.
 SessionLocal = sessionmaker(
     bind=engine,
-    autocommit=False,   # коммитить явно (db.commit())
-    autoflush=False,    # не «сливать» изменения в БД автоматически
+    autocommit=False,  # коммитить явно (db.commit())
+    autoflush=False,  # не «сливать» изменения в БД автоматически
     expire_on_commit=False,  # после commit() объекты остаются доступными
 )
 
