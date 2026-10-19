@@ -76,4 +76,17 @@ jobs:
           exit 1
 
       - name: Run pytest
-        run: pytest
+        run: pytest --alluredir=allure-results
+      - name: Generate Allure report
+        if: always()
+        run: |
+          npm install -g allure-commandline
+          allure generate allure-results -o allure-report --clean
+
+      - name: Upload Allure report as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report/
+          retention-days: 7

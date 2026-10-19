@@ -2,6 +2,7 @@
 
 from typing import Any
 
+import allure
 import requests
 
 
@@ -21,11 +22,29 @@ class APIClient:
         self.session.headers.update({"Authorization": f"Bearer {token}"})
 
     def request(self, method: str, path: str, **kwargs: Any) -> requests.Response:
-        """Базовый метод для любого HTTP-запроса."""
+        """Базовый метод для любого HTTP-запроса с логированием в Allure."""
         url = f"{self.base_url}/{path.lstrip('/')}"
         # Дефолтный таймаут, чтобы тесты не висели, если сервер упал
         kwargs.setdefault("timeout", 10)
-        return self.session.request(method, url, **kwargs)
+
+        # Оборачиваем запрос в шаг Allure
+        with allure.step(f"{method} {path}"):
+            response = self.session.request(method, url, **kwargs)
+
+            # Прикрепляем тело запроса и ответа к отчету (если они есть)
+            req_body = kwargs.get("json")
+            if req_body:
+                allure.attach(
+                    str(req_body), name="Request JSON", attachment_type=allure.attachment_type.TEXT
+                )
+
+            allure.attach(
+                response.text,
+                name=f"Response {response.status_code}",
+                attachment_type=allure.attachment_type.JSON,
+            )
+
+            return response
 
     # Удобные методы-шорткаты
     def get(self, path: str, **kwargs: Any) -> requests.Response:
